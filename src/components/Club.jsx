@@ -1,11 +1,14 @@
 import { Accessibility, ChevronDown, Filter, MapPin, Search, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { getClubList } from '../apis/club.js';
 import Header from './Header';
 
 const Club = () => {
+  const navigate = useNavigate();
+
   const [clubs, setClubs] = useState([]);
   const [page, setPage] = useState(0);
   const [size] = useState(12); // 한 번에 불러올 개수
@@ -248,7 +251,9 @@ const Club = () => {
                     )}
                   </StBadgeRow>
 
-                  <StDetailButton type="button">자세히 보기</StDetailButton>
+                  <StDetailButton type="button" onClick={() => navigate(`/club/${club.clubId}`)}>
+                    자세히 보기
+                  </StDetailButton>
                 </StClubCardBody>
               </StClubCard>
             ))}

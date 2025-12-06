@@ -32,3 +32,13 @@ export const getClubList = async ({
     throw error;
   }
 };
+
+export const getClubDetail = async (clubId) => {
+  try {
+    const { data } = await client.get(`/clubs/${clubId}`);
+    return data; // ClubDetailResponse
+  } catch (error) {
+    console.error('동호회 상세 조회 실패:', error);
+    throw error;
+  }
+};
