@@ -34,7 +34,7 @@ const Facility = () => {
   const [center, setCenter] = useState(DEFAULT_CENTER);
 
   const [page, setPage] = useState(0);
-  const [size] = useState(9);
+  const [size] = useState(3);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
