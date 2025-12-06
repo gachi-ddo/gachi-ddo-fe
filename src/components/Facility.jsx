@@ -41,6 +41,9 @@ const Facility = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 선택된 시설 (지도에서 강조 표시용)
+  const [selectedFacilityId, setSelectedFacilityId] = useState(null);
+
   // 1) 현재 위치 가져오기 (실패 시 서울 중심으로 fallback)
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -126,30 +129,67 @@ const Facility = () => {
   // 4) 지도 초기화
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const markersRef = useRef({});
 
   useEffect(() => {
     if (!center || !mapRef.current) return;
 
-    loadNaverMapScript().then(() => {
+    const initMapAndMarkers = () => {
       const { naver } = window;
       if (!naver || !naver.maps) return;
 
-      const map = new naver.maps.Map(mapRef.current, {
-        center: new naver.maps.LatLng(center.lat, center.lng),
-        zoom: 12,
+      // 지도 인스턴스 없으면 생성, 있으면 중심만 이동
+      let map = mapInstanceRef.current;
+      if (!map) {
+        map = new naver.maps.Map(mapRef.current, {
+          center: new naver.maps.LatLng(center.lat, center.lng),
+          zoom: 12,
+        });
+        mapInstanceRef.current = map;
+      } else {
+        map.setCenter(new naver.maps.LatLng(center.lat, center.lng));
+      }
+
+      // 기존 마커 제거
+      Object.values(markersRef.current).forEach((marker) => {
+        marker.setMap(null);
       });
+      markersRef.current = {};
 
-      mapInstanceRef.current = map;
-
+      // 새 마커 생성
       markers.forEach((m) => {
-        new naver.maps.Marker({
+        const isSelected = m.id === selectedFacilityId;
+
+        const size = isSelected ? 28 : 20;
+        const color = isSelected ? '#22c55e' : '#3b82f6'; // 초록 / 파랑
+
+        const marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(m.lat, m.lng),
           map,
           title: m.name,
+          icon: {
+            content: `
+              <div style="
+                width:${size}px;
+                height:${size}px;
+                border-radius:50%;
+                background:${color};
+                border:2px solid #ffffff;
+                box-shadow:0 0 0 2px rgba(15,23,42,0.25);
+              "></div>
+            `,
+            size: new naver.maps.Size(size, size),
+            anchor: new naver.maps.Point(size / 2, size / 2),
+          },
+          zIndex: isSelected ? 100 : 10,
         });
+
+        markersRef.current[m.id] = marker;
       });
-    });
-  }, [center, markers]);
+    };
+
+    loadNaverMapScript().then(initMapAndMarkers);
+  }, [center, markers, selectedFacilityId]);
 
   // 5) 현재 위치에서 재검색
   const handleSearchHere = () => {
@@ -166,6 +206,22 @@ const Facility = () => {
     setPosition(newCenter);
     setCenter(newCenter);   // 지도 중심 맞추기
     setPage(0);             // 페이지 0으로 리셋
+  };
+
+  // 6) 특정 시설에 포커스 (지도보기 버튼)
+  const handleFocusOnFacility = (facility) => {
+    setSelectedFacilityId(facility.id);
+
+    // 해당 시설 위치로 지도 중심 이동
+    if (facility.lat && facility.lng) {
+      setCenter({ lat: facility.lat, lng: facility.lng });
+    } else {
+      const map = mapInstanceRef.current;
+      const marker = markersRef.current[facility.id];
+      if (map && marker) {
+        map.setCenter(marker.getPosition());
+      }
+    }
   };
 
   // 페이징
@@ -205,7 +261,8 @@ const Facility = () => {
               </StMapDescription> */}
 
               <StSearchHereButton type="button" onClick={handleSearchHere}>
-                이 위치에서 재검색
+                <MapPin size={16} />
+                <span>이 위치에서 재검색</span>
               </StSearchHereButton>
 
               <StMapBox ref={mapRef} />
@@ -297,7 +354,9 @@ const Facility = () => {
                   <StFacilityCard key={facility.id}>
                     <StFacilityCardHeader>
                       <StFacilityTitle>{facility.name}</StFacilityTitle>
-                      {facility.facilityType && <StBadge>{facility.facilityType}</StBadge>}
+                      {facility.facilityType && (
+                        <StBadge>{facility.facilityType}</StBadge>
+                      )}
                     </StFacilityCardHeader>
 
                     <StFacilityBody>
@@ -348,7 +407,10 @@ const Facility = () => {
                           <span>홈페이지</span>
                         </StOutlineButton>
                       )}
-                      <StPrimaryButton type="button">
+                      <StPrimaryButton
+                        type="button"
+                        onClick={() => handleFocusOnFacility(facility)}
+                      >
                         <MapPin size={16} />
                         <span>지도보기</span>
                       </StPrimaryButton>
