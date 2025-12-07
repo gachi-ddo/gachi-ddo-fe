@@ -483,6 +483,7 @@ const StCardGrid = styled.section`
   display: grid;
   grid-template-columns: repeat(3, minmax(320px, 1fr));
   gap: 24px;
+  grid-auto-rows: 250px;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -501,7 +502,11 @@ const StFacilityCard = styled.article`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  height: 100%;   /* ✅ 그리드 셀 높이 전체 채우기 */
 `;
+
+
 
 const StFacilityCardHeader = styled.div`
   display: flex;
@@ -513,7 +518,18 @@ const StFacilityCardHeader = styled.div`
 const StFacilityTitle = styled.h3`
   ${({ theme }) => theme.fonts.Title6};
   color: ${({ theme }) => theme.colors.Gray900};
+
+  /* ✅ 최대 2줄 + 말줄임 + 항상 2줄 높이 확보 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;       /* 최대 2줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1.3;
+  min-height: calc(1.3em * 2); /* 2줄만큼 높이 강제 확보 */
 `;
+
 
 const StBadge = styled.span`
   ${({ theme }) => theme.fonts.Body6};
@@ -529,6 +545,7 @@ const StFacilityBody = styled.div`
   flex-direction: column;
   gap: 4px;
   margin-top: 4px;
+  /* flex: 1;  <- 있어도 되고 없어도 되지만, 없어도 margin-top: auto가 주 역할임 */
 `;
 
 const StFacilityRow = styled.div`
@@ -553,7 +570,7 @@ const StRowText = styled.p`
 `;
 
 const StFacilityFooter = styled.div`
-  margin-top: 12px;
+  margin-top: auto; 
   display: flex;
   gap: 8px;
 `;
@@ -737,5 +754,5 @@ const StLocateButton = styled.button`
 
 const StRowPlaceholder = styled.div`
   flex: 1;
-  height: 21px;      // 아이콘 높이 정도로 맞춰주기
+  height: 20px;      // 아이콘 높이 정도로 맞춰주기
 `;
