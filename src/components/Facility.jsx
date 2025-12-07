@@ -253,6 +253,20 @@ const Facility = () => {
     setPage((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1));
   };
 
+  const openHomepage = (rawUrl) => {
+    if (!rawUrl) return;
+
+    const trimmed = rawUrl.trim();
+
+    // 이미 http(s)로 시작하면 그대로 사용
+    const finalUrl = /^https?:\/\//i.test(trimmed)
+      ? trimmed
+      : `https://${trimmed.replace(/^\/+/, '')}`;
+
+    // 새 탭으로 강제 오픈
+    window.open(finalUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <>
       <Header />
@@ -318,32 +332,39 @@ const Facility = () => {
                         <StRowText>{facility.roadAddr}</StRowText>
                       </StFacilityRow>
 
-                      {facility.tel && (
-                        <StFacilityRow>
-                          <StRowIcon>
-                            <Phone size={16} />
-                          </StRowIcon>
-                          <StRowText>{facility.tel}</StRowText>
-                        </StFacilityRow>
-                      )}
+                      <StFacilityRow>
+                        {facility.tel ? (
+                          <>
+                            <StRowIcon>
+                              <Phone size={16} />
+                            </StRowIcon>
+                            <StRowText>{facility.tel}</StRowText>
+                          </>
+                        ) : (
+                          // 아이콘/텍스트 없이 빈 공간만 차지
+                          <StRowPlaceholder />
+                        )}
+                      </StFacilityRow>
 
-                      {facility.deptName && (
-                        <StFacilityRow>
-                          <StRowIcon>
-                            <Building2 size={16} />
-                          </StRowIcon>
-                          <StRowText>관리 부서: {facility.deptName}</StRowText>
-                        </StFacilityRow>
-                      )}
+                      <StFacilityRow>
+                        {facility.deptName ? (
+                          <>
+                            <StRowIcon>
+                              <Building2 size={16} />
+                            </StRowIcon>
+                            <StRowText>관리 부서: {facility.deptName}</StRowText>
+                          </>
+                        ) : (
+                          <StRowPlaceholder />
+                        )}
+                      </StFacilityRow>
                     </StFacilityBody>
 
                     <StFacilityFooter>
                       {facility.homepageUrl && (
                         <StOutlineButton
-                          as="a"
-                          href={facility.homepageUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          type="button"
+                          onClick={() => openHomepage(facility.homepageUrl)}
                         >
                           <Globe size={16} />
                           <span>홈페이지</span>
@@ -714,4 +735,7 @@ const StLocateButton = styled.button`
   }
 `;
 
-
+const StRowPlaceholder = styled.div`
+  flex: 1;
+  height: 21px;      // 아이콘 높이 정도로 맞춰주기
+`;
