@@ -237,7 +237,6 @@ const Facility = () => {
     <>
       <StFacilityWrapper>
         <Header />
-
         <StInner>
           {/* 페이지 타이틀 */}
           <StPageHeader>
@@ -249,88 +248,12 @@ const Facility = () => {
             </StPageSubTitle>
           </StPageHeader>
 
-          {/* 지도 섹션 – 실제 지도 대신 placeholder + 마커 리스트 */}
-          {/* <StMapCard>
-            <StMapInner>
-              <StMapIcon>📍</StMapIcon>
-              <StMapTitle>지도 뷰 (MVP)</StMapTitle>
-              <StMapDescription>
-                실제 서비스에서는 지도 API를 연동하여 시설 위치를 표시합니다.
-                <br />
-                현재는 주변 시설을 대표하는 마커 이름만 보여주고 있어요.
-              </StMapDescription> */}
-
               <StSearchHereButton type="button" onClick={handleSearchHere}>
                 <MapPin size={16} />
                 <span>이 위치에서 재검색</span>
               </StSearchHereButton>
 
               <StMapBox ref={mapRef} />
-
-              {/* <StMapCenterText>
-                중심 좌표: {center.lat.toFixed(4)}, {center.lng.toFixed(4)}
-              </StMapCenterText>
-
-              <StMapBadgeContainer>
-                {markers.map((marker) => (
-                  <StMapBadge key={marker.id}>📍 {marker.name}</StMapBadge>
-                ))}
-                {!isLoading && markers.length === 0 && (
-                  <StMapEmptyText>주변에 표시할 시설 마커가 없습니다.</StMapEmptyText>
-                )}
-              </StMapBadgeContainer>
-            </StMapInner>
-          </StMapCard> */}
-
-          {/* 검색/필터 – 현재는 UI만 (API X) */}
-          {/* <StFilterCard>
-            <StFilterTitle>검색 필터 (UI만, 아직 기능 연결 X)</StFilterTitle>
-            <StFilterGrid>
-              <StFilterField>
-                <StLabel htmlFor="search">검색어</StLabel>
-                <StInputWrapper>
-                  <StInputIcon>🔍</StInputIcon>
-                  <StInput
-                    id="search"
-                    placeholder="시설명, 시군구..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </StInputWrapper>
-              </StFilterField>
-
-              <StFilterField>
-                <StLabel htmlFor="region">지역</StLabel>
-                <StSelect
-                  id="region"
-                  value={selectedRegion}
-                  onChange={(e) => setSelectedRegion(e.target.value)}
-                >
-                  <option value="all">전체</option>
-                  <option value="서울특별시">서울특별시</option>
-                  <option value="부산광역시">부산광역시</option>
-                  <option value="인천광역시">인천광역시</option>
-                  <option value="대구광역시">대구광역시</option>
-                  <option value="경기도">경기도</option>
-                </StSelect>
-              </StFilterField>
-
-              <StFilterField>
-                <StLabel htmlFor="type">시설 유형</StLabel>
-                <StSelect
-                  id="type"
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                >
-                  <option value="all">전체</option>
-                  <option value="체육관">체육관</option>
-                  <option value="수영장">수영장</option>
-                  <option value="운동장">운동장</option>
-                  <option value="종합체육시설">종합체육시설</option>
-                </StSelect>
-              </StFilterField>
-            </StFilterGrid>
-          </StFilterCard> */}
 
           {/* 결과 요약 + 페이지네이션 */}
           <StResultHeader>
@@ -766,89 +689,6 @@ const StEmptySubText = styled.p`
   color: ${({ theme }) => theme.colors.Gray600};
   margin-top: 4px;
 `;
-
-/* 필터 카드 */
-
-// const StFilterCard = styled.section`
-//   width: 100%;
-//   border-radius: 16px;
-//   background-color: ${({ theme }) => theme.colors.White};
-//   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
-//   padding: 20px 24px 24px;
-//   margin-bottom: 24px;
-// `;
-
-// const StFilterTitle = styled.h3`
-//   ${({ theme }) => theme.fonts.Title6};
-//   color: ${({ theme }) => theme.colors.Gray900};
-//   margin-bottom: 16px;
-// `;
-
-// const StFilterGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: 1.2fr 1fr 1fr;
-//   gap: 16px;
-
-//   @media (max-width: 768px) {
-//     grid-template-columns: 1fr;
-//   }
-// `;
-
-// const StFilterField = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 6px;
-// `;
-
-// const StLabel = styled.label`
-//   ${({ theme }) => theme.fonts.Body7};
-//   color: ${({ theme }) => theme.colors.Gray700};
-// `;
-
-// const StInputWrapper = styled.div`
-//   position: relative;
-//   width: 100%;
-// `;
-
-// const StInputIcon = styled.span`
-//   position: absolute;
-//   left: 12px;
-//   top: 50%;
-//   transform: translateY(-50%);
-//   font-size: 14px;
-// `;
-
-// const StInput = styled.input`
-//   width: 100%;
-//   padding: 8px 12px 8px 32px;
-//   border-radius: 10px;
-//   border: 1px solid ${({ theme }) => theme.colors.Gray300};
-//   ${({ theme }) => theme.fonts.Body6};
-//   color: ${({ theme }) => theme.colors.Gray900};
-//   background-color: ${({ theme }) => theme.colors.Gray0};
-
-//   &:focus {
-//     outline: none;
-//     border-color: ${({ theme }) => theme.colors.MainGreen};
-//     box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
-//   }
-// `;
-
-// const StSelect = styled.select`
-//   width: 100%;
-//   padding: 8px 12px;
-//   border-radius: 10px;
-//   border: 1px solid ${({ theme }) => theme.colors.Gray300};
-//   ${({ theme }) => theme.fonts.Body6};
-//   color: ${({ theme }) => theme.colors.Gray900};
-//   background-color: ${({ theme }) => theme.colors.Gray0};
-
-//   &:focus {
-//     outline: none;
-//     border-color: ${({ theme }) => theme.colors.MainGreen};
-//     box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
-//   }
-// `;
 
 // 지도 영역
 const StMapBox = styled.div`
