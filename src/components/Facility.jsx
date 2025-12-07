@@ -235,8 +235,8 @@ const Facility = () => {
 
   return (
     <>
+      <Header />
       <StFacilityWrapper>
-        <Header />
         <StInner>
           {/* 페이지 타이틀 */}
           <StPageHeader>
@@ -298,15 +298,6 @@ const Facility = () => {
                             <Phone size={16} />
                           </StRowIcon>
                           <StRowText>{facility.tel}</StRowText>
-                        </StFacilityRow>
-                      )}
-
-                      {facility.area && (
-                        <StFacilityRow>
-                          <StRowIcon>
-                            <Ruler size={16} />
-                          </StRowIcon>
-                          <StRowText>면적: {facility.area}㎡</StRowText>
                         </StFacilityRow>
                       )}
 
@@ -394,7 +385,7 @@ const StFacilityWrapper = styled.div`
 `;
 
 const StInner = styled.div`
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px 80px;
 `;
@@ -443,7 +434,7 @@ const StErrorText = styled.p`
 
 const StCardGrid = styled.section`
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(320px, 1fr));
   gap: 24px;
 
   @media (max-width: 1024px) {
@@ -478,7 +469,7 @@ const StFacilityTitle = styled.h3`
 `;
 
 const StBadge = styled.span`
-  ${({ theme }) => theme.fonts.Body7};
+  ${({ theme }) => theme.fonts.Body6};
   padding: 4px 8px;
   border-radius: 999px;
   background-color: ${({ theme }) => theme.colors.MainGreen}1A;
@@ -509,7 +500,7 @@ const StRowIcon = styled.span`
 `;
 
 const StRowText = styled.p`
-  ${({ theme }) => theme.fonts.Body6};
+  ${({ theme }) => theme.fonts.Body7};
   color: ${({ theme }) => theme.colors.Gray700};
   line-height: 1.4; 
 `;
