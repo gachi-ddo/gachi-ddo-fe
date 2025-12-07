@@ -248,12 +248,14 @@ const Facility = () => {
             </StPageSubTitle>
           </StPageHeader>
 
-              <StSearchHereButton type="button" onClick={handleSearchHere}>
-                <MapPin size={16} />
-                <span>이 위치에서 재검색</span>
-              </StSearchHereButton>
+              <StMapWrapper>
+                <StMapBox ref={mapRef} />
 
-              <StMapBox ref={mapRef} />
+                <StSearchHereButton type="button" onClick={handleSearchHere}>
+                  <MapPin size={14} />
+                  <span>이 위치에서 재검색</span>
+                </StSearchHereButton>
+              </StMapWrapper>
 
           {/* 결과 요약 + 페이지네이션 */}
           <StResultHeader>
@@ -402,85 +404,20 @@ const StPageHeader = styled.header`
 `;
 
 const StPageTitle = styled.h1`
-  ${({ theme }) => theme.fonts.Title1};
+  ${({ theme }) => theme.fonts.Title2};
   color: ${({ theme }) => theme.colors.Black};
   margin-bottom: 8px;
 `;
 
 const StPageSubTitle = styled.p`
-  ${({ theme }) => theme.fonts.Body3};
+  ${({ theme }) => theme.fonts.Body4};
   color: ${({ theme }) => theme.colors.Gray700};
-`;
-
-/* 지도 카드 */
-
-const StMapCard = styled.section`
-  width: 100%;
-  border-radius: 16px;
-  background-color: ${({ theme }) => theme.colors.White};
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
-  margin-bottom: 32px;
-  overflow: hidden;
-`;
-
-const StMapInner = styled.div`
-  padding: 32px 24px 28px;
-  text-align: center;
-`;
-
-const StMapIcon = styled.div`
-  font-size: 32px;
-  margin-bottom: 12px;
-`;
-
-const StMapTitle = styled.h2`
-  ${({ theme }) => theme.fonts.Title5};
-  color: ${({ theme }) => theme.colors.Gray900};
-  margin-bottom: 8px;
-`;
-
-const StMapDescription = styled.p`
-  ${({ theme }) => theme.fonts.Body5};
-  color: ${({ theme }) => theme.colors.Gray600};
-  margin-bottom: 12px;
-`;
-
-const StMapCenterText = styled.p`
-  ${({ theme }) => theme.fonts.Body7};
-  color: ${({ theme }) => theme.colors.Gray500};
-  margin-bottom: 20px;
-`;
-
-const StMapBadgeContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-`;
-
-const StMapBadge = styled.span`
-  ${({ theme }) => theme.fonts.Body7};
-  padding: 4px 10px;
-  border-radius: 999px;
-  background-color: ${({ theme }) => theme.colors.Gray100};
-  color: ${({ theme }) => theme.colors.Gray800};
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.MainGreen};
-    color: ${({ theme }) => theme.colors.White};
-  }
-`;
-
-const StMapEmptyText = styled.p`
-  ${({ theme }) => theme.fonts.Body6};
-  color: ${({ theme }) => theme.colors.Gray500};
 `;
 
 /* 결과 헤더 */
 
 const StResultHeader = styled.div`
+  margin-top: 30px;
   margin-bottom: 12px;
 `;
 
@@ -507,7 +444,7 @@ const StErrorText = styled.p`
 const StCardGrid = styled.section`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -519,10 +456,10 @@ const StCardGrid = styled.section`
 `;
 
 const StFacilityCard = styled.article`
-  border-radius: 16px;
+  border-radius: 20px;
   background-color: ${({ theme }) => theme.colors.White};
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
-  padding: 18px 18px 16px;
+  padding: 20px 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -690,18 +627,27 @@ const StEmptySubText = styled.p`
   margin-top: 4px;
 `;
 
-// 지도 영역
+/* 지도 영역 */
+const StMapWrapper = styled.div`
+  position: relative;
+  margin-top: 16px;
+`;
+
 const StMapBox = styled.div`
   width: 100%;
   height: 360px;
-  margin-top: 16px;
   border-radius: 12px;
   background-color: #e5e5e5;
+  overflow: hidden;
 `;
 
-// 현재 위치에서 재검색 버튼
+
+/* 현재 위치에서 재검색 버튼 */
 const StSearchHereButton = styled.button`
   ${({ theme }) => theme.fonts.Body7};
+  position: absolute;
+  top: 12px;
+  right: 12px;
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid ${({ theme }) => theme.colors.Gray300};
@@ -709,6 +655,12 @@ const StSearchHereButton = styled.button`
   color: ${({ theme }) => theme.colors.Gray800};
   cursor: pointer;
   white-space: nowrap;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15); // 살짝 떠 있는 느낌
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.Gray100};
