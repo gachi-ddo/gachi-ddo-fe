@@ -1,14 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { Dumbbell,
-  Search,
+import { 
   MapPin,
   Phone,
   Globe,
-  UsersIcon,
-  Filter,
   Building2,
-  Ruler, } from "lucide-react"
+  Crosshair, } from "lucide-react"
 
 import Header from './Header';
 import { getNearbyFacilities } from '../apis/facility';
@@ -224,6 +221,29 @@ const Facility = () => {
     }
   };
 
+  // 7) 현재 위치 찾기 버튼
+  const handleLocateMe = () => {
+    const map = mapInstanceRef.current;
+    if (!map || !navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const newCenter = { lat: latitude, lng: longitude };
+
+        setPosition(newCenter);
+        setCenter(newCenter);
+        setPage(0);
+
+        map.setCenter(new window.naver.maps.LatLng(latitude, longitude));
+      },
+      (err) => {
+        console.warn('현재 위치를 가져올 수 없습니다.', err);
+      }
+    );
+  };
+
+
   // 페이징
   const handlePrevPage = () => {
     setPage((prev) => Math.max(prev - 1, 0));
@@ -251,10 +271,16 @@ const Facility = () => {
               <StMapWrapper>
                 <StMapBox ref={mapRef} />
 
+                {/* 우측 상단: 이 위치에서 재검색 */}
                 <StSearchHereButton type="button" onClick={handleSearchHere}>
                   <MapPin size={14} />
                   <span>이 위치에서 재검색</span>
                 </StSearchHereButton>
+
+                {/* 우측 하단: 현재 위치 찾기 */}
+                <StLocateButton type="button" onClick={handleLocateMe}>
+                  <Crosshair size={16} />
+                </StLocateButton>
               </StMapWrapper>
 
           {/* 결과 요약 + 페이지네이션 */}
@@ -621,15 +647,17 @@ const StEmptySubText = styled.p`
 /* 지도 영역 */
 const StMapWrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 360px;
   margin-top: 16px;
+  border-radius: 12px;
+  overflow: hidden;
 `;
 
 const StMapBox = styled.div`
   width: 100%;
-  height: 360px;
-  border-radius: 12px;
+  height: 100%;
   background-color: #e5e5e5;
-  overflow: hidden;
 `;
 
 
@@ -639,6 +667,13 @@ const StSearchHereButton = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid ${({ theme }) => theme.colors.Gray300};
@@ -646,14 +681,37 @@ const StSearchHereButton = styled.button`
   color: ${({ theme }) => theme.colors.Gray800};
   cursor: pointer;
   white-space: nowrap;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15); // 살짝 떠 있는 느낌
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.Gray100};
   }
 `;
+
+const StLocateButton = styled.button`
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: 1px solid ${({ theme }) => theme.colors.Gray300};
+  background-color: ${({ theme }) => theme.colors.White};
+  color: ${({ theme }) => theme.colors.Gray800};
+
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.Gray100};
+  }
+`;
+
+
