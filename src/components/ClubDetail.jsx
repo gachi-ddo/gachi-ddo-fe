@@ -99,6 +99,12 @@ const ClubDetail = () => {
                 {/* 공통: 기본 정보 */}
                 <StSectionBlock>
                   <StSectionTitle>기본 정보</StSectionTitle>
+                  {!club.disabled && (
+                    <StFullWidthInfo>
+                      <StInfoLabel>대상 연령대</StInfoLabel>
+                      <StInfoValue>{club.ageGroup || '연령 정보 없음'}</StInfoValue>
+                    </StFullWidthInfo>
+                  )}
                   <StInfoGrid>
                     {club.disabled ? (
                       <>
@@ -117,10 +123,6 @@ const ClubDetail = () => {
                       </>
                     ) : (
                       <>
-                        <StInfoItem>
-                          <StInfoLabel>대상 연령대</StInfoLabel>
-                          <StInfoValue>{club.ageGroup || '연령 정보 없음'}</StInfoValue>
-                        </StInfoItem>
                         <StInfoItem>
                           <StInfoLabel>성별</StInfoLabel>
                           <StInfoValue>{club.genderType || '성별 미지정'}</StInfoValue>
@@ -298,7 +300,7 @@ const StSectionTitle = styled.h2`
 const StInfoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px 24px;
+  gap: 12px 30px;
 `;
 
 const StInfoItem = styled.div`
@@ -329,4 +331,11 @@ const StDescriptionBox = styled.div`
     line-height: 1.6;
     white-space: pre-line;
   }
+`;
+
+const StFullWidthInfo = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
